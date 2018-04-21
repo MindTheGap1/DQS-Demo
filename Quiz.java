@@ -148,7 +148,6 @@ public class Quiz extends Student{
 
     public void saveResults() {
         try {
-            System.out.println("Saving");
             FileWriter writer = new FileWriter("studentresults.csv", true);
             writer.append(this.getSchool() + "," + this.getYearGroup() + "," + this.getQuestionsAnswered() + "," + this.getQuestionsCorrect());
             writer.append("\n");

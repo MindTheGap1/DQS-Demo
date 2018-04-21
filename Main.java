@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 public class Main {
     public static void main(String[] args) {
         System.out.println("--Science Quiz--");
@@ -76,7 +77,12 @@ public class Main {
         }    
         
         System.out.println("That's the end of the quiz!");
-        System.out.println("You scored " + quiz.getQuestionsCorrect() + " out of " + quiz.getQuestionsAnswered());
+        System.out.println("Do you want to see your results? [Y/N]");
+        Scanner resultIn = new Scanner(System.in);
+        String seeResult = resultIn.nextLine();
+        if (seeResult.toLowerCase().equals("y")) {
+            System.out.println("You scored " + quiz.getQuestionsCorrect() + " out of " + quiz.getQuestionsAnswered());
+        }
         quiz.saveResults();
     }
 
@@ -174,7 +180,120 @@ public class Main {
     }
 
     public static void viewStats() {
+        try {
+            Scanner in = new Scanner(System.in);
+            System.out.println("1: View all results");
+            System.out.println("2: View results for specific school");
+            System.out.println("3: View results for specific year group");
+            System.out.println("4: Detailed summary");
+            System.out.print(">");
 
+            int option = in.nextInt();
+
+            if (option == 1) {
+                viewAllStats();
+            } else if (option == 2) {
+                viewSchoolStats();
+            } else if (option == 3) {
+
+            } else if (option == 4) {
+                viewSummaryStats();
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("Please enter a valid input");
+        }
+    }
+
+    public static void viewAllStats() {
+        try {
+            Scanner statReader = new Scanner(new File("studentresults.csv"));
+            while (statReader.hasNextLine()) {
+                String[] details = (statReader.nextLine()).split(",");
+                System.out.print("Student from: ");
+                System.out.println(details[0]);
+                System.out.print("Year Group: ");
+                System.out.println(details[1]);
+                System.out.print("Questions Correct: ");
+                System.out.print(details[3]);
+                System.out.print(" out of ");
+                System.out.println(details[2]);
+                System.out.println();
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("File cannot be found!");
+        }
+    }
+
+    public static void viewSchoolStats() {
+        Scanner in = new Scanner(System.in);
+        System.out.println("Enter the school you wish to view: ");
+        String schoolName = in.nextLine();
+        try {
+            Scanner statReader = new Scanner(new File("studentresults.csv"));
+            while (statReader.hasNextLine()) {
+                String[] details = (statReader.nextLine()).split(",");
+                if (details[0].contains(schoolName)) {
+                    System.out.print("Student from: ");
+                    System.out.println(details[0]);
+                    System.out.print("Year Group: ");
+                    System.out.println(details[1]);
+                    System.out.print("Questions Correct: ");
+                    System.out.print(details[3]);
+                    System.out.print(" out of ");
+                    System.out.println(details[2]);
+                    System.out.println();    
+                }
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("File cannot be found!");
+        }
+    }
+
+    public static void viewYearStats() {
+        Scanner in = new Scanner(System.in);
+        System.out.println("Enter the year you wish to view: ");
+        String yearGroup = in.nextLine();
+        try {
+            Scanner statReader = new Scanner(new File("studentresults.csv"));
+            while (statReader.hasNextLine()) {
+                String[] details = (statReader.nextLine()).split(",");
+                if (details[1].equals(yearGroup)) {
+                    System.out.print("Student from: ");
+                    System.out.println(details[0]);
+                    System.out.print("Year Group: ");
+                    System.out.println(details[1]);
+                    System.out.print("Questions Correct: ");
+                    System.out.print(details[3]);
+                    System.out.print(" out of ");
+                    System.out.println(details[2]);
+                    System.out.println();
+                }
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("File cannot be found!");
+        }
+    }
+
+    public static void viewSummaryStats() {
+        try {
+            Scanner statReader = new Scanner(new File("studentresults.csv"));
+            int highestScore = 0;
+            int sum = 0;
+            int lineCount = 0;
+            while (statReader.hasNextLine()) {
+                String[] details = (statReader.nextLine()).split(",");
+                if (Integer.parseInt(details[3]) > highestScore) {
+                    highestScore = Integer.parseInt(details[3]);
+                }
+                sum += Integer.parseInt(details[3]);
+                lineCount++;
+            }
+            float avg = sum / lineCount;
+            System.out.println("The highest raw score was " + highestScore);
+            System.out.println("The average raw score was " + avg);
+        } catch (FileNotFoundException e) {
+            System.out.println("File cannot be found!");
+        }
     }
 
     public static void replace(String replacer, String oldString, String filename) {
