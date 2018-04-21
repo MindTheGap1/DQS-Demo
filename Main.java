@@ -12,19 +12,25 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 public class Main {
     public static void main(String[] args) {
-        System.out.println("--Science Quiz--");
-        System.out.println("1: Start Quiz");
-        System.out.println("2: Admin Login");
-        System.out.print(">");
-        Scanner in = new Scanner(System.in);
-        int input = in.nextInt();
-        switch (input) {
-            case 1: System.out.println("Starting Quiz...");
-                    getDetails();
-                    break;
-            case 2: adminLogin();
-                    break;
-        } 
+        while (true) {
+            System.out.println("--Science Quiz--");
+            System.out.println("1: Start Quiz");
+            System.out.println("2: Admin Login");
+            System.out.println("0: Exit");
+            System.out.print(">");
+            Scanner in = new Scanner(System.in);
+            int input = in.nextInt();
+            switch (input) {
+                case 1: System.out.println("Starting Quiz...");
+                        getDetails();
+                        break;
+                case 2: adminLogin();
+                        break;
+                case 0: System.exit(0);
+                default: System.out.println("Please enter a valid input");
+            }
+        }
+         
         
     }
 
