@@ -1,15 +1,17 @@
 import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
-public class Quiz {
+import java.io.FileWriter;
+import java.io.IOException;
+public class Quiz extends Student{
     private Student student;
     private int questionsAnswered;
     private int questionsCorrect;
     private Question[] questions;
     private boolean quizQuit;
     
-    public Quiz(Student student, int questionsAnswered, int questionsCorrect, Question[] questions, boolean quizQuit) {
-        this.student = student;
+    public Quiz(String school, String yearGroup, int questionsAnswered, int questionsCorrect, Question[] questions, boolean quizQuit) {
+        super(school, yearGroup);
         this.questionsAnswered = questionsAnswered;
         this.questionsCorrect = questionsCorrect;
         this.questions = questions;
@@ -139,7 +141,20 @@ public class Quiz {
 
     public void quitQuiz() {
         System.out.println("You quit the quiz early");
+        saveResults();
         this.setQuizQuit(true);
+        
+    }
+
+    public void saveResults() {
+        try {
+            System.out.println("Saving");
+            FileWriter writer = new FileWriter("studentresults.csv", true);
+            writer.append(this.getSchool() + "," + this.getYearGroup() + "," + this.getQuestionsAnswered() + "," + this.getQuestionsCorrect());
+            writer.append("\n");
+            writer.close();
+        } catch (IOException e) {
+        }
     }
 
 }
