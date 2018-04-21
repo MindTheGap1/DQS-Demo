@@ -59,18 +59,24 @@ public class Main {
 
     public static void startQuiz(Student student) {
         Question[] questions = new Question[10];
-        Quiz quiz = new Quiz(student, 0, 0, questions);
+        Quiz quiz = new Quiz(student, 0, 0, questions, false);
         //IMPORTANT: questions must be loaded as such, the program will attempt to get 10 and only 10 questions
         //If there are fewer than 10 in the csv file, the remaining slots will be null
         quiz.loadQuestions();
+        
         for (int i = 0; i < quiz.getQuestions().length; i++) {
+            if (quiz.getQuizQuit() == true) {
+                break;
+            }
             try {
                 quiz.askQuestion(i);
             } catch (NullPointerException e) {
                 //too few questions
-            }
-            
-        }
+            } 
+        }    
+        
+        System.out.println("That's the end of the quiz!");
+        System.out.println("You scored " + quiz.getQuestionsCorrect() + " out of " + quiz.getQuestionsAnswered());
     }
 
     public static void adminLogin() {

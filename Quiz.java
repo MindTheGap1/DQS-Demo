@@ -6,12 +6,14 @@ public class Quiz {
     private int questionsAnswered;
     private int questionsCorrect;
     private Question[] questions;
+    private boolean quizQuit;
     
-    public Quiz(Student student, int questionsAnswered, int questionsCorrect, Question[] questions) {
+    public Quiz(Student student, int questionsAnswered, int questionsCorrect, Question[] questions, boolean quizQuit) {
         this.student = student;
         this.questionsAnswered = questionsAnswered;
         this.questionsCorrect = questionsCorrect;
         this.questions = questions;
+        this.quizQuit = quizQuit;
     }
 
     public Student getStudent() {
@@ -40,6 +42,13 @@ public class Quiz {
     }
     public void setQuestions(Question[] questions) {
         this.questions = questions;
+    }
+
+    public boolean getQuizQuit() {
+        return quizQuit;
+    }
+    public void setQuizQuit(boolean quizQuit) {
+        this.quizQuit = quizQuit;
     }
 
     public Question[] loadQuestions() {
@@ -102,17 +111,35 @@ public class Quiz {
                 System.out.print((i+1) + ": ");
                 System.out.println(question.getSingleAnswer(i));
             }
+            System.out.println("0: Quit");
             Scanner in = new Scanner(System.in);
             System.out.print(">");
             int answer = in.nextInt();
             if (answer == question.getCorrectNumber()) {
                 System.out.println("Correct");
+                this.questionsAnswered += 1;
+                this.questionsCorrect += 1;
+            } else if (answer == 0) {
+                System.out.println("Are you sure [Y/N]?");
+                Scanner quitIn = new Scanner(System.in);
+                String quit = quitIn.nextLine();
+                if (quit.toLowerCase().equals("y")) {
+                    quitQuiz();
+                } else {
+                    askQuestion(questionNo);
+                }
             } else {
                 System.out.println("Incorrect");
+                this.questionsAnswered += 1;
             }
         } catch (NullPointerException e) {
 
         }
+    }
+
+    public void quitQuiz() {
+        System.out.println("You quit the quiz early");
+        this.setQuizQuit(true);
     }
 
 }
