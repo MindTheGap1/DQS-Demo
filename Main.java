@@ -72,11 +72,8 @@ public class Main {
         //IMPORTANT: questions must be loaded as such, the program will attempt to get 10 and only 10 questions
         //If there are fewer than 10 in the csv file, the remaining slots will be null
         quiz.loadQuestions();
-<<<<<<< HEAD
 
-=======
         System.out.println("Starting quiz...");
->>>>>>> 6a9613da540ff8706401999fd2f291ea263ec607
         for (int i = 0; i < quiz.getQuestions().length; i++) {
             try {
                 if (quiz.getQuizQuit() == true) {
@@ -91,11 +88,8 @@ public class Main {
             } catch (NullPointerException e) {
                 //too few questions
             }
-<<<<<<< HEAD
         }
-=======
-        }    
->>>>>>> 6a9613da540ff8706401999fd2f291ea263ec607
+        }
         quiz.saveResults();
         System.out.println("That's the end of the quiz!");
         System.out.println("Do you want to see your results? [Y/N]");
@@ -448,7 +442,6 @@ public class Main {
         } catch (IOException e) {
         }
     }
-<<<<<<< HEAD
 
     public static String checkInput(String pattern) {
         Scanner in = new Scanner(System.in);
@@ -466,6 +459,4 @@ public class Main {
         return Pattern.matches(regexPattern,userInput.trim());
     }
 
-=======
->>>>>>> 6a9613da540ff8706401999fd2f291ea263ec607
 }
