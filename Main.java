@@ -459,8 +459,4 @@ public class Main {
         return Pattern.matches(regexPattern,userInput.trim());
     }
 
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 4d441375383cb0d8b54839d407c78745f83a3d3e
