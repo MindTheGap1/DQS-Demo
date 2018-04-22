@@ -9,12 +9,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Scanner;
-
-import jdk.nashorn.internal.runtime.regexp.joni.ScanEnvironment;
-
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 public class Main {
+    public static String topic = "spacequestions.csv";
     public static void main(String[] args) {
         while (true) {
             System.out.println("--Science Quiz--");
@@ -60,15 +58,16 @@ public class Main {
         }
         if (schoolAccepted == true) {
             Student student = new Student(schoolName, yearGroup);
-            startQuiz(student);
+            startQuiz(student, topic);
         } else {
             System.out.println("Your school name or year group has not been accepted, please try again");
         }
     }
 
-    public static void startQuiz(Student student) {
+    public static void startQuiz(Student student, String topic) {
         Question[] questions = new Question[10];
         Quiz quiz = new Quiz(student.getSchool(), student.getYearGroup(), 0, 0, questions, false);
+        quiz.setTopic(topic);
         //IMPORTANT: questions must be loaded as such, the program will attempt to get 10 and only 10 questions
         //If there are fewer than 10 in the csv file, the remaining slots will be null
         quiz.loadQuestions();
@@ -83,7 +82,7 @@ public class Main {
                 //too few questions
             } 
         }    
-        
+        quiz.saveResults();
         System.out.println("That's the end of the quiz!");
         System.out.println("Do you want to see your results? [Y/N]");
         Scanner resultIn = new Scanner(System.in);
@@ -91,7 +90,6 @@ public class Main {
         if (seeResult.toLowerCase().equals("y")) {
             System.out.println("You scored " + quiz.getQuestionsCorrect() + " out of " + quiz.getQuestionsAnswered());
         }
-        quiz.saveResults();
     }
 
     public static void adminLogin() {
@@ -159,9 +157,55 @@ public class Main {
 
     public static void editQuestions() {
         System.out.println("1: Edit current questions");
-        System.out.println("2: Add new school");
+        System.out.println("2: Add new question");
+        System.out.println("0: Exit");
         Scanner choiceIn = new Scanner(System.in);
         int choice = choiceIn.nextInt();
+        if (choice == 1) {
+            System.out.println("Edit which question file? [Remember to add the .csv file extension]");
+            Scanner fileIn = new Scanner(System.in);
+            String filename = fileIn.nextLine();
+            try {
+                Scanner questionReader = new Scanner(new File(filename));
+                System.out.println("Questions:");
+                int lineCount = 0;
+                while (questionReader.hasNextLine()) {
+                    String[] details = (questionReader.nextLine()).split(",");
+                    System.out.print(lineCount + ": ");
+                    System.out.println(details[0]+","+details[1]+","+details[2]+","+details[3]+","+details[4]+","+details[5]);
+                    lineCount++;
+                }
+            } catch (IOException e) {
+            }
+            System.out.println("Choose a number to edit a question");
+            Scanner in = new Scanner(System.in);
+            int lineNo = in.nextInt();
+            String line = "";
+            try {
+                line = Files.readAllLines(Paths.get("schools.csv")).get(lineNo);
+            } catch (IOException e) {
+            }
+            System.out.println("Line to edit: " + line);
+            System.out.println("Please enter the new question information in the format: question,option,option,option,option,correctoptionnumber");
+            System.out.print(">");
+            Scanner editIn = new Scanner(System.in);
+            String replacer = editIn.nextLine();
+            replace(replacer,line,filename);
+        } else if (choice == 2) {
+            System.out.println("Edit which question file? [Remember to add the .csv file extension]");
+            Scanner fileIn = new Scanner(System.in);
+            String filename = fileIn.nextLine();
+            System.out.println("Please enter the new question information in the format: question,option,option,option,option,correctoptionnumber");
+            System.out.print(">");
+            Scanner editIn = new Scanner(System.in);
+            String newQuestion = editIn.nextLine();
+            try {
+                BufferedWriter bufOut = new BufferedWriter(new FileWriter(filename, true));
+                bufOut.write(newQuestion + "\n");
+                bufOut.close();
+            } catch (IOException e) {
+            }
+        }
     }
 
     public static void editSchools() {
@@ -214,7 +258,9 @@ public class Main {
     }
 
     public static void selectTopic() {
-
+        System.out.println("Enter the name of the topic you wish to select: ");
+        Scanner topicIn = new Scanner(System.in);
+        topic = topicIn.nextLine();
     }
 
     public static void viewStats() {
@@ -233,7 +279,7 @@ public class Main {
             } else if (option == 2) {
                 viewSchoolStats();
             } else if (option == 3) {
-
+                viewYearStats();
             } else if (option == 4) {
                 viewSummaryStats();
             }
@@ -251,6 +297,8 @@ public class Main {
                 System.out.println(details[0]);
                 System.out.print("Year Group: ");
                 System.out.println(details[1]);
+                System.out.print("Topic: ");
+                System.out.println(details[4]);
                 System.out.print("Questions Correct: ");
                 System.out.print(details[3]);
                 System.out.print(" out of ");
@@ -275,6 +323,8 @@ public class Main {
                     System.out.println(details[0]);
                     System.out.print("Year Group: ");
                     System.out.println(details[1]);
+                    System.out.print("Topic: ");
+                    System.out.println(details[4]);
                     System.out.print("Questions Correct: ");
                     System.out.print(details[3]);
                     System.out.print(" out of ");
@@ -300,6 +350,8 @@ public class Main {
                     System.out.println(details[0]);
                     System.out.print("Year Group: ");
                     System.out.println(details[1]);
+                    System.out.print("Topic: ");
+                    System.out.println(details[4]);
                     System.out.print("Questions Correct: ");
                     System.out.print(details[3]);
                     System.out.print(" out of ");

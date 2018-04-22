@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 public class Quiz extends Student{
     private Student student;
+    private String topic;
     private int questionsAnswered;
     private int questionsCorrect;
     private Question[] questions;
@@ -23,6 +24,13 @@ public class Quiz extends Student{
     }
     public void setStudent(Student student) {
         this.student = student;
+    }
+
+    public String getTopic() {
+        return topic;
+    }
+    public void setTopic(String topic) {
+        this.topic = topic;
     }
 
     public int getQuestionsAnswered() {
@@ -55,7 +63,7 @@ public class Quiz extends Student{
 
     public Question[] loadQuestions() {
         try {
-            Scanner questionReader = new Scanner(new File("questionsandanswers.csv"));
+            Scanner questionReader = new Scanner(new File(topic));
             int lineCount = 0;
             while (questionReader.hasNextLine()) {
                 String[] details = (questionReader.nextLine()).split(",");
@@ -149,7 +157,7 @@ public class Quiz extends Student{
     public void saveResults() {
         try {
             FileWriter writer = new FileWriter("studentresults.csv", true);
-            writer.append(this.getSchool() + "," + this.getYearGroup() + "," + this.getQuestionsAnswered() + "," + this.getQuestionsCorrect());
+            writer.append(this.getSchool() + "," + this.getYearGroup() + "," + this.getQuestionsAnswered() + "," + this.getQuestionsCorrect() + "," + this.getTopic());
             writer.append("\n");
             writer.close();
         } catch (IOException e) {
