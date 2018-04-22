@@ -153,7 +153,12 @@ public class Quiz extends Student{
         this.setQuizQuit(true);
         
     }
-
+//    public void Restart() {
+//        System.out.println("You have decided to restart the quiz");
+//        saveResults()
+//        This.getTopic()
+//    }
+    
     public void saveResults() {
         try {
             FileWriter writer = new FileWriter("studentresults.csv", true);
