@@ -89,6 +89,7 @@ public class Main {
                 //too few questions
             }
         }
+        
         quiz.saveResults();
         System.out.println("That's the end of the quiz!");
         System.out.println("Do you want to see your results? [Y/N]");
@@ -458,4 +459,8 @@ public class Main {
         return Pattern.matches(regexPattern,userInput.trim());
     }
 
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 4d441375383cb0d8b54839d407c78745f83a3d3e
