@@ -11,12 +11,8 @@ public class Quiz extends Student{
     private int questionsCorrect;
     private Question[] questions;
     private boolean quizQuit;
-<<<<<<< HEAD
-
-=======
     private boolean quizRestart = false;
     
->>>>>>> 6a9613da540ff8706401999fd2f291ea263ec607
     public Quiz(String school, String yearGroup, int questionsAnswered, int questionsCorrect, Question[] questions, boolean quizQuit) {
         super(school, yearGroup);
         this.questionsAnswered = questionsAnswered;
@@ -147,7 +143,7 @@ public class Quiz extends Student{
                 System.out.println("1: Quit");
                 System.out.println("2: Restart");
                 Scanner qrIn = new Scanner(System.in);
-                int qr = in.nextInt();
+                int qr = qrIn.nextInt();
                 if (qr == 1) {
                     System.out.println("Are you sure [Y/N]?");
                     Scanner quitIn = new Scanner(System.in);
@@ -181,11 +177,7 @@ public class Quiz extends Student{
         System.out.println("You quit the quiz early");
         saveResults();
         this.setQuizQuit(true);
-<<<<<<< HEAD
-
     }
-
-=======
         
     }
     public void restartQuiz() {
@@ -195,7 +187,6 @@ public class Quiz extends Student{
         this.setQuestionsCorrect(0);
     }
     
->>>>>>> 6a9613da540ff8706401999fd2f291ea263ec607
     public void saveResults() {
         try {
             FileWriter writer = new FileWriter("studentresults.csv", true);
