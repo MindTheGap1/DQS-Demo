@@ -1,4 +1,5 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -123,19 +124,28 @@ public class Main {
     }
     
     public static void adminPage() {
-        Scanner in = new Scanner(System.in);
-        System.out.println("--ADMIN TOOLS--");
-        System.out.println("1: Edit questions");
-        System.out.println("2: Edit schools");
-        System.out.println("3: Select quiz topic");
-        System.out.println("4: View answer statistics");
-        System.out.print(">");
-        int input = in.nextInt();
-        switch (input) {
-            case 1: editQuestions();
-            case 2: editSchools();
-            case 3: selectTopic();
-            case 4: viewStats();
+        while (true) {
+            Scanner in = new Scanner(System.in);
+            System.out.println("--ADMIN TOOLS--");
+            System.out.println("1: Edit questions");
+            System.out.println("2: Edit schools");
+            System.out.println("3: Select quiz topic");
+            System.out.println("4: View answer statistics");
+            System.out.println("0: Back to Main Menu");
+            System.out.print(">");
+            int input = in.nextInt();
+            switch (input) {
+                case 1: editQuestions();
+                        break;
+                case 2: editSchools();
+                        break;
+                case 3: selectTopic();
+                        break;
+                case 4: viewStats();
+                        break;
+                case 0: break;
+            }
+            break;    
         }
     }
 
@@ -178,6 +188,16 @@ public class Main {
             String replacer = editIn.nextLine();
             replace(replacer,line,"schools.csv");
         } else if (choice == 2) {
+            System.out.println("Please enter the new school information in the format: SchoolName,year,year,...");
+            System.out.print(">");
+            Scanner editIn = new Scanner(System.in);
+            String newSchool = editIn.nextLine();
+            try {
+                BufferedWriter bufOut = new BufferedWriter(new FileWriter("schools.csv", true));
+                bufOut.write(newSchool + "\n");
+                bufOut.close();
+            } catch (IOException e) {
+            }
         }
     }
 
