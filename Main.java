@@ -9,6 +9,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Scanner;
+
+import jdk.nashorn.internal.runtime.regexp.joni.ScanEnvironment;
+
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 public class Main {
@@ -31,8 +34,6 @@ public class Main {
                 default: System.out.println("Please enter a valid input");
             }
         }
-         
-        
     }
 
     public static void getDetails() {
@@ -131,7 +132,7 @@ public class Main {
             System.out.println("2: Edit schools");
             System.out.println("3: Select quiz topic");
             System.out.println("4: View answer statistics");
-            System.out.println("0: Back to Main Menu");
+            System.out.println("0: Logout");
             System.out.print(">");
             int input = in.nextInt();
             switch (input) {
@@ -143,19 +144,30 @@ public class Main {
                         break;
                 case 4: viewStats();
                         break;
-                case 0: break;
-            }
-            break;    
+                case 0: 
+                System.out.println("Are you sure? [Y/N]");
+                Scanner logIn = new Scanner(System.in);
+                String logChoice = logIn.nextLine().toLowerCase();
+                if (logChoice.equals("y")) {
+                    return;
+                }
+                break;
+                default: System.out.println("Please enter a valid input");
+            }  
         }
     }
 
     public static void editQuestions() {
-
+        System.out.println("1: Edit current questions");
+        System.out.println("2: Add new school");
+        Scanner choiceIn = new Scanner(System.in);
+        int choice = choiceIn.nextInt();
     }
 
     public static void editSchools() {
         System.out.println("1: Edit current schools");
         System.out.println("2: Add new school");
+        System.out.println("0: Exit");
         Scanner choiceIn = new Scanner(System.in);
         int choice = choiceIn.nextInt();
         if (choice == 1) {
