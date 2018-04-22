@@ -11,7 +11,12 @@ public class Quiz extends Student{
     private int questionsCorrect;
     private Question[] questions;
     private boolean quizQuit;
+<<<<<<< HEAD
 
+=======
+    private boolean quizRestart = false;
+    
+>>>>>>> 6a9613da540ff8706401999fd2f291ea263ec607
     public Quiz(String school, String yearGroup, int questionsAnswered, int questionsCorrect, Question[] questions, boolean quizQuit) {
         super(school, yearGroup);
         this.questionsAnswered = questionsAnswered;
@@ -60,6 +65,13 @@ public class Quiz extends Student{
     }
     public void setQuizQuit(boolean quizQuit) {
         this.quizQuit = quizQuit;
+    }
+
+    public boolean getQuizRestart() {
+        return quizRestart;
+    }
+    public void setQuizRestart(boolean quizRestart) {
+        this.quizRestart = quizRestart;
     }
 
     public Question[] loadQuestions() {
@@ -132,14 +144,30 @@ public class Quiz extends Student{
                 this.questionsAnswered += 1;
                 this.questionsCorrect += 1;
             } else if (answer == 0) {
-                System.out.println("Are you sure [Y/N]?");
-                Scanner quitIn = new Scanner(System.in);
-                String quit = quitIn.nextLine();
-                if (quit.toLowerCase().equals("y")) {
-                    quitQuiz();
-                } else {
-                    askQuestion(questionNo);
+                System.out.println("1: Quit");
+                System.out.println("2: Restart");
+                Scanner qrIn = new Scanner(System.in);
+                int qr = in.nextInt();
+                if (qr == 1) {
+                    System.out.println("Are you sure [Y/N]?");
+                    Scanner quitIn = new Scanner(System.in);
+                    String quit = quitIn.nextLine();
+                    if (quit.toLowerCase().equals("y")) {
+                        quitQuiz();
+                    } else {
+                        askQuestion(questionNo);
+                    }    
+                } else if (qr == 2) {
+                    System.out.println("Are you sure [Y/N]?");
+                    Scanner restartIn = new Scanner(System.in);
+                    String restart = restartIn.nextLine();
+                    if (restart.toLowerCase().equals("y")) {
+                        restartQuiz();
+                    } else {
+                        askQuestion(questionNo);
+                    }  
                 }
+                
             } else {
                 System.out.println("Incorrect");
                 this.questionsAnswered += 1;
@@ -153,9 +181,21 @@ public class Quiz extends Student{
         System.out.println("You quit the quiz early");
         saveResults();
         this.setQuizQuit(true);
+<<<<<<< HEAD
 
     }
 
+=======
+        
+    }
+    public void restartQuiz() {
+        System.out.println("You have decided to restart the quiz");
+        this.setQuizRestart(true);
+        this.setQuestionsAnswered(0);
+        this.setQuestionsCorrect(0);
+    }
+    
+>>>>>>> 6a9613da540ff8706401999fd2f291ea263ec607
     public void saveResults() {
         try {
             FileWriter writer = new FileWriter("studentresults.csv", true);
