@@ -182,7 +182,7 @@ public class Main {
             int lineNo = in.nextInt();
             String line = "";
             try {
-                line = Files.readAllLines(Paths.get("schools.csv")).get(lineNo);
+                line = Files.readAllLines(Paths.get(filename)).get(lineNo);
             } catch (IOException e) {
             }
             System.out.println("Line to edit: " + line);
@@ -190,7 +190,9 @@ public class Main {
             System.out.print(">");
             Scanner editIn = new Scanner(System.in);
             String replacer = editIn.nextLine();
-            replace(replacer,line,filename);
+            System.out.println("Writing " + replacer + " to " + line + filename);
+            replaceQuestion(replacer, filename, lineNo);
+            //replace(replacer,line,filename);
         } else if (choice == 2) {
             System.out.println("Edit which question file? [Remember to add the .csv file extension]");
             Scanner fileIn = new Scanner(System.in);
@@ -396,13 +398,44 @@ public class Main {
             while ((line = rdr.readLine()) != null) {
                 oldText += line + "\r\n";
             }
+            System.out.println(oldText);
             rdr.close();
             String newText = oldText.replaceAll(oldString, replacer);
             FileWriter writer = new FileWriter(filename);
+            System.out.println("Writing " + newText);
             writer.write(newText);
             writer.close();
         } catch (IOException e) {
+            System.out.println(e);
+        }
+    }
 
+    public static void replaceQuestion(String replacer, String filename, int lineNo) {
+        try {
+            Scanner questionlineReader = new Scanner(new File(filename));
+            int lineCount = 0;
+            FileWriter writer = new FileWriter("temp.csv");
+            while (questionlineReader.hasNextLine()) {
+                String details = questionlineReader.nextLine();
+                if (lineCount == lineNo) {
+                    writer.write(replacer);
+                    writer.write("\n");
+                } else {
+                    writer.write(details);
+                    writer.write("\n");
+                }
+                lineCount++;
+            }
+            writer.close();
+            FileWriter copywriter = new FileWriter(filename);
+            Scanner tempReader = new Scanner(new File("temp.csv"));
+            while (tempReader.hasNextLine()) {
+                String details = tempReader.nextLine();
+                copywriter.write(details);
+                copywriter.write("\n");  
+            }
+            copywriter.close();
+        } catch (IOException e) {
         }
     }
 }
