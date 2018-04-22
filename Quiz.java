@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+
 public class Quiz extends Student{
     private Student student;
     private String topic;
@@ -10,7 +11,7 @@ public class Quiz extends Student{
     private int questionsCorrect;
     private Question[] questions;
     private boolean quizQuit;
-    
+
     public Quiz(String school, String yearGroup, int questionsAnswered, int questionsCorrect, Question[] questions, boolean quizQuit) {
         super(school, yearGroup);
         this.questionsAnswered = questionsAnswered;
@@ -104,7 +105,7 @@ public class Quiz extends Student{
                 Question question = new Question(questionString, answers, incorrectAnswers, correctAnswer, correctNumber);
                 questions[lineCount] = question;
                 lineCount++;
-            }  
+            }
         } catch (FileNotFoundException e) {
             System.out.println("School details missing!");
         }
@@ -122,9 +123,10 @@ public class Quiz extends Student{
                 System.out.println(question.getSingleAnswer(i));
             }
             System.out.println("0: Quit");
-            Scanner in = new Scanner(System.in);
-            System.out.print(">");
-            int answer = in.nextInt();
+
+            //int answer = -1;
+            int answer = Integer.parseInt(Main.checkInput("[01234]"));
+
             if (answer == question.getCorrectNumber()) {
                 System.out.println("Correct");
                 this.questionsAnswered += 1;
@@ -151,14 +153,9 @@ public class Quiz extends Student{
         System.out.println("You quit the quiz early");
         saveResults();
         this.setQuizQuit(true);
-        
+
     }
-//    public void Restart() {
-//        System.out.println("You have decided to restart the quiz");
-//        saveResults()
-//        This.getTopic()
-//    }
-    
+
     public void saveResults() {
         try {
             FileWriter writer = new FileWriter("studentresults.csv", true);

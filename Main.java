@@ -11,17 +11,18 @@ import java.nio.file.Paths;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
+import java.util.regex.*;
+
 public class Main {
     public static String topic = "spacequestions.csv";
+
     public static void main(String[] args) {
         while (true) {
             System.out.println("--Science Quiz--");
             System.out.println("1: Start Quiz");
             System.out.println("2: Admin Login");
             System.out.println("0: Exit");
-            System.out.print(">");
-            Scanner in = new Scanner(System.in);
-            int input = in.nextInt();
+            int input = Integer.parseInt(checkInput("[012]"));
             switch (input) {
                 case 1: System.out.println("Starting Quiz...");
                         getDetails();
@@ -29,7 +30,6 @@ public class Main {
                 case 2: adminLogin();
                         break;
                 case 0: System.exit(0);
-                default: System.out.println("Please enter a valid input");
             }
         }
     }
@@ -41,8 +41,8 @@ public class Main {
         System.out.println("Enter your school year group: ");
         //yearGroup is String and not int to allow for easy searching in csv file
         String yearGroup = in.nextLine();
-
         boolean schoolAccepted = false;
+
         try {
             Scanner schoolReader = new Scanner(new File("schools.csv"));
             while (schoolReader.hasNextLine()) {
@@ -51,8 +51,8 @@ public class Main {
                     if (schoolName.equals(details[0])) {
                         schoolAccepted = true;
                     }
-                } 
-            }  
+                }
+            }
         } catch (FileNotFoundException e) {
             System.out.println("School details missing!");
         }
@@ -71,7 +71,7 @@ public class Main {
         //IMPORTANT: questions must be loaded as such, the program will attempt to get 10 and only 10 questions
         //If there are fewer than 10 in the csv file, the remaining slots will be null
         quiz.loadQuestions();
-        
+
         for (int i = 0; i < quiz.getQuestions().length; i++) {
             if (quiz.getQuizQuit() == true) {
                 break;
@@ -80,8 +80,8 @@ public class Main {
                 quiz.askQuestion(i);
             } catch (NullPointerException e) {
                 //too few questions
-            } 
-        }    
+            }
+        }
         quiz.saveResults();
         System.out.println("That's the end of the quiz!");
         System.out.println("Do you want to see your results? [Y/N]");
@@ -98,19 +98,19 @@ public class Main {
         String adminUsername = in.next();
         System.out.println("Password: ");
         String adminPassword = in.next();
-        
+
         //check if password is correct
         boolean loginSuccess = false;
         try {
             Scanner adminReader = new Scanner(new File("admindetails.csv"));
-            
+
             while (adminReader.hasNextLine()) {
                 String[] details = (adminReader.nextLine()).split(",");
                 if (adminUsername.equals(details[0]) && adminPassword.equals(details[1])) {
                     System.out.println("Login Success");
                     loginSuccess = true;
                 }
-            }  
+            }
         } catch (FileNotFoundException e) {
             System.out.println("Login details missing!");
         }
@@ -119,9 +119,9 @@ public class Main {
             adminPage();
         } else {
             System.out.println("Login failed (NOTE: usernames and passwords are case sensitive)");
-        }  
+        }
     }
-    
+
     public static void adminPage() {
         while (true) {
             Scanner in = new Scanner(System.in);
@@ -131,8 +131,7 @@ public class Main {
             System.out.println("3: Select quiz topic");
             System.out.println("4: View answer statistics");
             System.out.println("0: Logout");
-            System.out.print(">");
-            int input = in.nextInt();
+            int input = Integer.parseInt(checkInput("[01234]"));
             switch (input) {
                 case 1: editQuestions();
                         break;
@@ -142,7 +141,7 @@ public class Main {
                         break;
                 case 4: viewStats();
                         break;
-                case 0: 
+                case 0:
                 System.out.println("Are you sure? [Y/N]");
                 Scanner logIn = new Scanner(System.in);
                 String logChoice = logIn.nextLine().toLowerCase();
@@ -151,7 +150,7 @@ public class Main {
                 }
                 break;
                 default: System.out.println("Please enter a valid input");
-            }  
+            }
         }
     }
 
@@ -159,8 +158,7 @@ public class Main {
         System.out.println("1: Edit current questions");
         System.out.println("2: Add new question");
         System.out.println("0: Exit");
-        Scanner choiceIn = new Scanner(System.in);
-        int choice = choiceIn.nextInt();
+        int choice = Integer.parseInt(checkInput("[012]"));
         if (choice == 1) {
             System.out.println("Edit which question file? [Remember to add the .csv file extension]");
             Scanner fileIn = new Scanner(System.in);
@@ -168,7 +166,7 @@ public class Main {
             try {
                 Scanner questionReader = new Scanner(new File(filename));
                 System.out.println("Questions:");
-                int lineCount = 0;
+                int lineCount = 1;
                 while (questionReader.hasNextLine()) {
                     String[] details = (questionReader.nextLine()).split(",");
                     System.out.print(lineCount + ": ");
@@ -179,10 +177,10 @@ public class Main {
             }
             System.out.println("Choose a number to edit a question");
             Scanner in = new Scanner(System.in);
-            int lineNo = in.nextInt();
+            int lineNo = Integer.parseInt(checkInput("[123456789]|[1][0]"));;
             String line = "";
             try {
-                line = Files.readAllLines(Paths.get(filename)).get(lineNo);
+                line = Files.readAllLines(Paths.get(filename)).get(lineNo-1);
             } catch (IOException e) {
             }
             System.out.println("Line to edit: " + line);
@@ -214,29 +212,30 @@ public class Main {
         System.out.println("1: Edit current schools");
         System.out.println("2: Add new school");
         System.out.println("0: Exit");
-        Scanner choiceIn = new Scanner(System.in);
-        int choice = choiceIn.nextInt();
+        int choice = Integer.parseInt(checkInput("[012]"));
         if (choice == 1) {
             try {
                 Scanner schoolReader = new Scanner(new File("schools.csv"));
-                
+
                 System.out.println("School Names:");
-                int lineCount = 0;
+                int lineCount = 1;
                 while (schoolReader.hasNextLine()) {
                     String[] details = (schoolReader.nextLine()).split(",");
                     System.out.print(lineCount + ": ");
                     System.out.println(details[0]);
                     lineCount++;
-                }  
+                }
             } catch (FileNotFoundException e) {
                 System.out.println("School details missing!");
             }
             System.out.println("Choose a number to edit a school");
-            Scanner in = new Scanner(System.in);
-            int lineNo = in.nextInt();
+
+            // Add Another Check as Could pick a line that doesn't exist
+            int lineNo = Integer.parseInt(checkInput("[\\d]+"));
+
             String line = "";
             try {
-                line = Files.readAllLines(Paths.get("schools.csv")).get(lineNo);
+                line = Files.readAllLines(Paths.get("schools.csv")).get(lineNo-1);
             } catch (IOException e) {
             }
             System.out.println("Line to edit: " + line);
@@ -267,14 +266,11 @@ public class Main {
 
     public static void viewStats() {
         try {
-            Scanner in = new Scanner(System.in);
             System.out.println("1: View all results");
             System.out.println("2: View results for specific school");
             System.out.println("3: View results for specific year group");
             System.out.println("4: Detailed summary");
-            System.out.print(">");
-
-            int option = in.nextInt();
+            int option = Integer.parseInt(checkInput("[1234]"));
 
             if (option == 1) {
                 viewAllStats();
@@ -286,7 +282,7 @@ public class Main {
                 viewSummaryStats();
             }
         } catch (InputMismatchException e) {
-            System.out.println("Please enter a valid input");
+
         }
     }
 
@@ -331,7 +327,7 @@ public class Main {
                     System.out.print(details[3]);
                     System.out.print(" out of ");
                     System.out.println(details[2]);
-                    System.out.println();    
+                    System.out.println();
                 }
             }
         } catch (FileNotFoundException e) {
@@ -432,10 +428,27 @@ public class Main {
             while (tempReader.hasNextLine()) {
                 String details = tempReader.nextLine();
                 copywriter.write(details);
-                copywriter.write("\n");  
+                copywriter.write("\n");
             }
             copywriter.close();
         } catch (IOException e) {
         }
     }
+
+    public static String checkInput(String pattern) {
+        Scanner in = new Scanner(System.in);
+        String userInput = "";
+        System.out.print("> ");
+        userInput = in.nextLine();
+        while (!regexChecker(userInput,pattern)) {
+            System.out.print("Invalid Input > ");
+            userInput = in.nextLine();
+        }
+        return userInput;
+    }
+
+    public static Boolean regexChecker(String userInput, String regexPattern) {
+        return Pattern.matches(regexPattern,userInput.trim());
+    }
+
 }
