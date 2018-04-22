@@ -49,6 +49,7 @@ public class Main {
                 String[] details = (schoolReader.nextLine()).split(",");
                 for (int i = 1; i < details.length; i++) {
                     if (schoolName.equals(details[0])) {
+                        System.out.println("Found");
                         schoolAccepted = true;
                     }
                 } 
@@ -71,16 +72,21 @@ public class Main {
         //IMPORTANT: questions must be loaded as such, the program will attempt to get 10 and only 10 questions
         //If there are fewer than 10 in the csv file, the remaining slots will be null
         quiz.loadQuestions();
-        
+        System.out.println("Starting quiz...");
         for (int i = 0; i < quiz.getQuestions().length; i++) {
-            if (quiz.getQuizQuit() == true) {
-                break;
-            }
             try {
-                quiz.askQuestion(i);
+                if (quiz.getQuizQuit() == true) {
+                    break;
+                } else if (quiz.getQuizRestart() == true) {
+                    i = 0;
+                    //quiz.setQuizRestart(false);
+                    startQuiz(student, topic);;
+                } else {
+                    quiz.askQuestion(i);        
+                }
             } catch (NullPointerException e) {
                 //too few questions
-            } 
+            }
         }    
         quiz.saveResults();
         System.out.println("That's the end of the quiz!");
