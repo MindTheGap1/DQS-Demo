@@ -267,9 +267,20 @@ public class Main {
     }
 
     public static void selectTopic() {
-        System.out.println("Enter the name of the topic you wish to select: ");
         Scanner topicIn = new Scanner(System.in);
-        topic = topicIn.nextLine();
+
+        String PatternFile = ("[a-zA-Z0-9]+.csv");
+        String CorrectFile = "false";
+
+        while (CorrectFile == "false") {
+            System.out.println("Enter the name of the topic you wish to select: ");
+            topic = topicIn.nextLine();
+
+            if (topic.matches (PatternFile)) {
+                CorrectFile = "true";
+                System.out.println("Topic selected: " + topic + "\n");
+            }
+        }
     }
 
     public static void viewStats() {
