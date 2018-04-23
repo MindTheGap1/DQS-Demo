@@ -11,14 +11,15 @@ public class Quiz extends Student{
     private int questionsCorrect;
     private Question[] questions;
     private boolean quizQuit;
-    private boolean quizRestart = false;
+    private boolean quizRestart;
     
-    public Quiz(String school, String yearGroup, int questionsAnswered, int questionsCorrect, Question[] questions, boolean quizQuit) {
+    public Quiz(String school, String yearGroup, int questionsAnswered, int questionsCorrect, Question[] questions, boolean quizQuit, boolean quizRestart) {
         super(school, yearGroup);
         this.questionsAnswered = questionsAnswered;
         this.questionsCorrect = questionsCorrect;
         this.questions = questions;
         this.quizQuit = quizQuit;
+        this.quizRestart = quizRestart;
     }
 
     public Student getStudent() {
@@ -143,7 +144,7 @@ public class Quiz extends Student{
                 System.out.println("1: Quit");
                 System.out.println("2: Restart");
                 Scanner qrIn = new Scanner(System.in);
-                int qr = qrIn.nextInt();
+                int qr = Integer.parseInt(Main.checkInput("[12]"));
                 if (qr == 1) {
                     System.out.println("Are you sure [Y/N]?");
                     Scanner quitIn = new Scanner(System.in);

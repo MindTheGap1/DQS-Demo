@@ -49,7 +49,6 @@ public class Main {
                 String[] details = (schoolReader.nextLine()).split(",");
                 for (int i = 1; i < details.length; i++) {
                     if (schoolName.equals(details[0])) {
-                        System.out.println("Found");
                         schoolAccepted = true;
                     }
                 }
@@ -67,7 +66,7 @@ public class Main {
 
     public static void startQuiz(Student student, String topic) {
         Question[] questions = new Question[10];
-        Quiz quiz = new Quiz(student.getSchool(), student.getYearGroup(), 0, 0, questions, false);
+        Quiz quiz = new Quiz(student.getSchool(), student.getYearGroup(), 0, 0, questions, false, false);
         quiz.setTopic(topic);
         //IMPORTANT: questions must be loaded as such, the program will attempt to get 10 and only 10 questions
         //If there are fewer than 10 in the csv file, the remaining slots will be null
@@ -81,7 +80,9 @@ public class Main {
                 } else if (quiz.getQuizRestart() == true) {
                     i = 0;
                     //quiz.setQuizRestart(false);
-                    startQuiz(student, topic);;
+                    System.out.println("Restarting...");
+                    quiz.restartQuiz();
+                    quiz.setQuizQuit(true);
                 } else {
                     quiz.askQuestion(i);        
                 }
@@ -90,14 +91,20 @@ public class Main {
             }
         }
         
-        quiz.saveResults();
-        System.out.println("That's the end of the quiz!");
-        System.out.println("Do you want to see your results? [Y/N]");
-        Scanner resultIn = new Scanner(System.in);
-        String seeResult = resultIn.nextLine();
-        if (seeResult.toLowerCase().equals("y")) {
-            System.out.println("You scored " + quiz.getQuestionsCorrect() + " out of " + quiz.getQuestionsAnswered());
+        if (quiz.getQuizRestart() == true) {
+            quiz.setQuizRestart(false);
+            startQuiz(student, topic);
+        } else {
+            quiz.saveResults();
+            System.out.println("That's the end of the quiz!");
+            System.out.println("Do you want to see your results? [Y/N]");
+            Scanner resultIn = new Scanner(System.in);
+            String seeResult = resultIn.nextLine();
+            if (seeResult.toLowerCase().equals("y")) {
+                System.out.println("You scored " + quiz.getQuestionsCorrect() + " out of " + quiz.getQuestionsAnswered());
+            } 
         }
+        
     }
 
     public static void adminLogin() {
@@ -273,7 +280,7 @@ public class Main {
         String CorrectFile = "false";
 
         while (CorrectFile == "false") {
-            System.out.println("Enter the name of the topic you wish to select: ");
+            System.out.println("Enter the name of the topic you wish to select (make sure to add .csv to the end of the name): ");
             topic = topicIn.nextLine();
 
             if (topic.matches (PatternFile)) {
